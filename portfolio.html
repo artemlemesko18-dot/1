@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lavender Studio — сайт студии депиляции и массажа | Демо-проект</title>
+<meta name="description" content="Демо-проект: главная страница студии шугаринга, депиляции воском и антицеллюлитного массажа. Современный женственный дизайн, mobile-first, быстрая запись в мессенджерах.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#6B3FA0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* =========================================================
+   1. ДИЗАЙН-ТОКЕНЫ: цвета, шрифты, радиусы, отступы
+   ========================================================= */
+:root{
+  --c-primary:#6B3FA0;
+  --c-primary-dark:#4E2C78;
+  --c-primary-soft:#EFE7F7;
+  --c-powder:#F4DFE8;
+  --c-powder-soft:#FBF0F4;
+  --c-bg:#FBF8FC;
+  --c-surface:#FFFFFF;
+  --c-text:#2E1F3D;
+  --c-muted:#5E5170;
+  --c-faint:#8A7F96;
+  --c-line:#E7DFEE;
+  --c-accent:#B8336A;
+  --c-accent-hover:#9C2958;
+  --c-wa:#1E7A45;
+  --c-viber:#5B45C2;
+  --c-focus:#B8336A;
+
+  --f-head:"Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --f-body:"Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --fs-body:17px;
+  --lh-body:1.6;
+
+  --r-sm:12px; --r-md:16px; --r-lg:24px; --r-pill:999px;
+
+  --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:24px;
+  --sp-6:32px; --sp-7:48px; --sp-8:64px; --sp-9:96px;
+  --gutter:16px;
+  --container:1200px;
+  --section-y:64px;
+
+  --shadow-sm:0 2px 8px rgba(46,31,61,.06);
+  --shadow-md:0 10px 30px rgba(78,44,120,.10);
+  --shadow-lg:0 20px 50px rgba(78,44,120,.16);
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --t:.25s;
+
+  --header-h:68px;
+  --tap:44px;
+}
+@media (min-width:768px){ :root{ --gutter:32px; --section-y:96px; --fs-body:18px; --header-h:76px; } }
+
+/* =========================================================
+   2. БАЗА
+   ========================================================= */
+*,*::before,*::after{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+body{
+  margin:0; background:var(--c-bg); color:var(--c-text);
+  font-family:var(--f-body); font-size:var(--fs-body); line-height:var(--lh-body);
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:72px;
+}
+@media (min-width:768px){ body{ padding-bottom:0; } }
+body.no-scroll{ overflow:hidden; }
+img{ max-width:100%; display:block; }
+a{ color:var(--c-primary); text-decoration:none; }
+p{ margin:0 0 var(--sp-4); }
+h1,h2,h3{ font-family:var(--f-head); font-weight:600; line-height:1.15; margin:0 0 var(--sp-4); color:var(--c-text); }
+h1{ font-size:clamp(2.4rem, 7vw, 4.2rem); letter-spacing:-.01em; }
+h2{ font-size:clamp(2rem, 5vw, 3rem); }
+h3{ font-size:1.5rem; }
+:focus-visible{ outline:3px solid var(--c-focus); outline-offset:3px; border-radius:6px; }
+.visually-hidden{ position:absolute!important; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+.container{ width:100%; max-width:var(--container); margin:0 auto; padding:0 var(--gutter); }
+.section{ padding:var(--section-y) 0; }
+.section--tint{ background:linear-gradient(180deg, var(--c-powder-soft), var(--c-bg)); }
+.section-head{ max-width:640px; margin-bottom:var(--sp-7); }
+.section-head p{ color:var(--c-muted); }
+.eyebrow{
+  display:inline-block; font-size:.8rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--c-primary); margin-bottom:var(--sp-3);
+}
+.icon{ width:24px; height:24px; flex:none; stroke:currentColor; fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+
+/* Плашка демо-проекта */
+.demo-bar{ background:var(--c-text); color:#E9E0F2; font-size:.82rem; text-align:center; padding:8px var(--gutter); line-height:1.4; }
+.demo-bar strong{ color:#fff; font-weight:600; }
+
+/* Кнопки */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  min-height:52px; padding:0 26px; border-radius:var(--r-pill); border:2px solid transparent;
+  font:600 1rem/1 var(--f-body); cursor:pointer; text-align:center;
+  transition:background var(--t) var(--ease), color var(--t) var(--ease), transform var(--t) var(--ease), box-shadow var(--t) var(--ease), border-color var(--t);
+}
+.btn:hover{ transform:translateY(-2px); }
+.btn--accent{ background:var(--c-accent); color:#fff; box-shadow:0 8px 22px rgba(184,51,106,.28); }
+.btn--accent:hover{ background:var(--c-accent-hover); }
+.btn--outline{ background:transparent; color:var(--c-primary-dark); border-color:var(--c-primary); }
+.btn--outline:hover{ background:var(--c-primary); color:#fff; }
+.btn--wa{ background:var(--c-wa); color:#fff; }
+.btn--wa:hover{ background:#17633a; }
+.btn--viber{ background:var(--c-viber); color:#fff; }
+.btn--viber:hover{ background:#4a37a8; }
+.btn--sm{ min-height:var(--tap); padding:0 20px; font-size:.95rem; }
+
+/* Фото с плейсхолдером */
+.photo{ position:relative; overflow:hidden; background:linear-gradient(135deg, var(--c-primary-soft), var(--c-powder)); }
+.photo img{ width:100%; height:100%; object-fit:cover; }
+.photo .ph{
+  position:absolute; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+  color:var(--c-primary-dark); text-align:center; padding:var(--sp-5); font-size:.95rem;
+}
+.photo .ph .icon{ width:48px; height:48px; opacity:.6; }
+.photo.is-missing img{ display:none; }
+.photo.is-missing .ph{ display:flex; }
+
+/* Появление блоков */
+.reveal{ opacity:0; transform:translateY(24px); transition:opacity .7s var(--ease), transform .7s var(--ease); }
+.reveal.is-visible{ opacity:1; transform:none; }
+@media (prefers-reduced-motion:reduce){
+  html{ scroll-behavior:auto; }
+  .reveal{ opacity:1; transform:none; transition:none; }
+  *{ transition-duration:.01ms!important; }
+}
+
+/* =========================================================
+   3. ШАПКА
+   ========================================================= */
+.header{
+  position:sticky; top:0; z-index:50; background:rgba(251,248,252,.92);
+  backdrop-filter:saturate(160%) blur(10px); -webkit-backdrop-filter:saturate(160%) blur(10px);
+  border-bottom:1px solid transparent; transition:box-shadow var(--t), border-color var(--t);
+}
+.header.is-scrolled{ box-shadow:var(--shadow-sm); border-color:var(--c-line); }
+.header__inner{ height:var(--header-h); display:flex; align-items:center; gap:var(--sp-4); }
+.logo{ display:flex; flex-direction:column; line-height:1; color:var(--c-text); margin-right:auto; }
+.logo__name{ font-family:var(--f-head); font-weight:700; font-size:1.55rem; letter-spacing:.06em; }
+.logo__name span{ color:var(--c-accent); }
+.logo__sub{ font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--c-muted); margin-top:4px; }
+
+.nav{ display:none; }
+.nav__list{ list-style:none; margin:0; padding:0; display:flex; align-items:center; gap:2px; }
+.nav__link{
+  display:inline-flex; align-items:center; gap:4px; min-height:var(--tap); padding:0 11px; border-radius:var(--r-pill);
+  color:var(--c-text); font-size:.95rem; font-weight:500; background:none; border:0; cursor:pointer; font-family:inherit;
+  transition:background var(--t), color var(--t);
+}
+.nav__link:hover{ background:var(--c-primary-soft); color:var(--c-primary-dark); }
+.nav__link[aria-current="page"]{ background:var(--c-primary); color:#fff; }
+.nav__link .chev{ width:16px; height:16px; transition:transform var(--t); }
+.has-drop{ position:relative; }
+.dropdown{
+  position:absolute; top:calc(100% + 8px); left:0; min-width:240px; padding:8px; margin:0; list-style:none;
+  background:var(--c-surface); border-radius:var(--r-md); box-shadow:var(--shadow-lg); border:1px solid var(--c-line);
+  opacity:0; visibility:hidden; transform:translateY(-6px); transition:opacity var(--t), transform var(--t), visibility var(--t);
+}
+.has-drop.is-open .dropdown{ opacity:1; visibility:visible; transform:none; }
+.has-drop.is-open .chev{ transform:rotate(180deg); }
+.dropdown a{ display:flex; align-items:center; min-height:var(--tap); padding:0 14px; border-radius:10px; color:var(--c-text); font-size:.95rem; }
+.dropdown a:hover{ background:var(--c-powder-soft); color:var(--c-accent-hover); }
+
+.search{ display:flex; align-items:center; background:var(--c-surface); border:1px solid var(--c-line); border-radius:var(--r-pill); padding:4px; }
+.search input{
+  border:0; background:transparent; font:inherit; font-size:.95rem; color:var(--c-text); padding:0 12px; min-height:36px; width:150px; outline:none;
+}
+.search input::placeholder{ color:var(--c-faint); }
+.search button{
+  width:36px; height:36px; border-radius:50%; border:0; background:var(--c-primary); color:#fff; display:grid; place-items:center; cursor:pointer;
+  transition:background var(--t);
+}
+.search button:hover{ background:var(--c-primary-dark); }
+.search button .icon{ width:18px; height:18px; }
+.search:focus-within{ border-color:var(--c-primary); box-shadow:0 0 0 3px var(--c-primary-soft); }
+.header__search{ display:none; }
+.header__cta{ display:none; }
+
+.icon-btn{
+  width:var(--tap); height:var(--tap); border-radius:50%; border:1px solid var(--c-line); background:var(--c-surface);
+  display:grid; place-items:center; color:var(--c-text); cursor:pointer; transition:background var(--t), border-color var(--t);
+}
+.icon-btn:hover{ background:var(--c-primary-soft); border-color:var(--c-primary); }
+
+.m-search{ display:grid; grid-template-rows:0fr; transition:grid-template-rows var(--t) var(--ease); border-top:1px solid transparent; }
+.m-search.is-open{ grid-template-rows:1fr; border-color:var(--c-line); }
+.m-search > div{ overflow:hidden; }
+.m-search .search{ margin:12px 0; }
+.m-search .search input{ width:100%; flex:1; min-height:var(--tap); }
+.m-search .search button{ width:var(--tap); height:var(--tap); }
+
+.m-menu{
+  position:fixed; inset:0; z-index:60; background:var(--c-bg); display:flex; flex-direction:column;
+  padding:0 var(--gutter) var(--sp-6); overflow-y:auto;
+  opacity:0; visibility:hidden; transform:translateY(-12px); transition:opacity var(--t), transform var(--t), visibility var(--t);
+}
+.m-menu.is-open{ opacity:1; visibility:visible; transform:none; }
+.m-menu__top{ height:var(--header-h); display:flex; align-items:center; justify-content:space-between; flex:none; }
+.m-menu__list{ list-style:none; margin:var(--sp-4) 0 var(--sp-6); padding:0; }
+.m-menu__list > li{ border-bottom:1px solid var(--c-line); }
+.m-menu__link{
+  display:flex; align-items:center; justify-content:space-between; width:100%; min-height:56px; padding:0 4px;
+  font:500 1.5rem/1.2 var(--f-head); color:var(--c-text); background:none; border:0; cursor:pointer; text-align:left;
+}
+.m-menu__link[aria-current="page"]{ color:var(--c-primary); }
+.m-menu__link[aria-current="page"]::after{ content:"•"; color:var(--c-accent); }
+.m-menu__link .chev{ width:22px; height:22px; transition:transform var(--t); }
+.m-sub{ display:grid; grid-template-rows:0fr; transition:grid-template-rows var(--t) var(--ease); }
+.m-sub > ul{ overflow:hidden; list-style:none; margin:0; padding:0 0 0 12px; }
+.m-drop.is-open .m-sub{ grid-template-rows:1fr; }
+.m-drop.is-open .chev{ transform:rotate(180deg); }
+.m-sub a{ display:flex; align-items:center; min-height:var(--tap); color:var(--c-muted); }
+.m-drop.is-open .m-sub > ul{ padding-bottom:12px; }
+.m-menu__actions{ display:grid; gap:12px; margin-top:auto; }
+
+@media (min-width:768px){
+  .header__search{ display:flex; }
+  .search-toggle{ display:none; }
+  .header__cta{ display:inline-flex; }
+}
+@media (min-width:1180px){
+  .nav{ display:block; }
+  .burger{ display:none; }
+  .header__search input{ width:120px; }
+  .m-search{ display:none; }
+}
+@media (min-width:1320px){ .header__search input{ width:160px; } }
+
+/* =========================================================
+   4. HERO
+   ========================================================= */
+.hero{ position:relative; padding:var(--sp-7) 0 var(--section-y); overflow:hidden; }
+.hero::before{
+  content:""; position:absolute; width:620px; height:620px; right:-200px; top:-160px; border-radius:50%;
+  background:radial-gradient(circle, var(--c-powder) 0%, transparent 65%); z-index:-1;
+}
+.hero::after{
+  content:""; position:absolute; width:460px; height:460px; left:-200px; bottom:-120px; border-radius:50%;
+  background:radial-gradient(circle, var(--c-primary-soft) 0%, transparent 70%); z-index:-1;
+}
+.hero__grid{ display:grid; gap:var(--sp-7); align-items:center; }
+.hero__lead{ font-size:1.15rem; color:var(--c-muted); max-width:520px; margin-bottom:var(--sp-6); }
+.hero__actions{ display:flex; flex-wrap:wrap; gap:12px; margin-bottom:var(--sp-7); }
+.hero__actions .btn{ flex:1 1 220px; }
+.perks{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.perk{
+  display:flex; align-items:center; gap:12px; padding:12px 14px; background:var(--c-surface); border-radius:var(--r-md);
+  box-shadow:var(--shadow-sm); font-size:.92rem; font-weight:500; line-height:1.3;
+}
+.perk__ico{ width:40px; height:40px; border-radius:50%; background:var(--c-primary-soft); color:var(--c-primary); display:grid; place-items:center; flex:none; }
+.perk__ico .icon{ width:20px; height:20px; }
+
+.hero__visual{ position:relative; max-width:440px; width:100%; margin:0 auto; }
+.hero__frame{
+  aspect-ratio:4/5; border-radius:220px 220px var(--r-lg) var(--r-lg); box-shadow:var(--shadow-lg);
+  border:8px solid var(--c-surface);
+}
+.hero__deco{
+  position:absolute; inset:-18px -18px auto auto; width:100%; height:100%;
+  border:1.5px solid var(--c-primary); border-radius:230px 230px 28px 28px; opacity:.35; z-index:-1;
+}
+.hero__badge{
+  position:absolute; left:-8px; bottom:28px; background:var(--c-surface); border-radius:var(--r-md); padding:14px 18px;
+  box-shadow:var(--shadow-md); display:flex; align-items:center; gap:12px;
+}
+.hero__badge strong{ font-family:var(--f-head); font-size:2rem; line-height:1; color:var(--c-primary); }
+.hero__badge span{ font-size:.85rem; color:var(--c-muted); line-height:1.3; }
+
+@media (min-width:600px){ .perks{ grid-template-columns:repeat(4,1fr); } .perk{ flex-direction:column; text-align:center; padding:16px 10px; } }
+@media (min-width:960px){
+  .hero{ padding-top:var(--sp-8); }
+  .hero__grid{ grid-template-columns:1.15fr .85fr; }
+  .hero__actions .btn{ flex:0 0 auto; }
+  .perks{ grid-template-columns:repeat(2,1fr); max-width:520px; }
+  .perk{ flex-direction:row; text-align:left; padding:12px 14px; }
+}
+@media (min-width:1180px){ .perks{ grid-template-columns:repeat(4,1fr); max-width:none; } .perk{ flex-direction:column; text-align:center; } }
+
+/* =========================================================
+   5. КАРТОЧКИ
+   ========================================================= */
+.cards{ display:grid; gap:var(--sp-4); }
+@media (min-width:600px){ .cards{ grid-template-columns:repeat(2,1fr); gap:var(--sp-5); } }
+@media (min-width:1024px){ .cards--4{ grid-template-columns:repeat(4,1fr); } }
+
+.card{
+  background:var(--c-surface); border-radius:var(--r-lg); padding:var(--sp-6) var(--sp-5); box-shadow:var(--shadow-sm);
+  border:1px solid var(--c-line); display:flex; flex-direction:column;
+  transition:transform var(--t) var(--ease), box-shadow var(--t) var(--ease), border-color var(--t);
+}
+.card:hover{ transform:translateY(-4px); box-shadow:var(--shadow-md); border-color:transparent; }
+.card__ico{
+  width:56px; height:56px; border-radius:18px; display:grid; place-items:center; margin-bottom:var(--sp-5);
+  background:linear-gradient(135deg, var(--c-primary-soft), var(--c-powder)); color:var(--c-primary-dark);
+}
+.card__ico .icon{ width:28px; height:28px; }
+.card h3{ margin-bottom:var(--sp-2); }
+.card p{ color:var(--c-muted); font-size:.98rem; flex:1; }
+.more{
+  display:inline-flex; align-items:center; gap:6px; min-height:var(--tap); font-weight:600; font-size:.95rem; color:var(--c-accent);
+  margin-top:auto; align-self:flex-start;
+}
+.more .icon{ width:18px; height:18px; transition:transform var(--t); }
+.more:hover .icon, .card:hover .more .icon{ transform:translateX(4px); }
+
+/* =========================================================
+   6. О МАСТЕРЕ
+   ========================================================= */
+.about__grid{ display:grid; gap:var(--sp-7); align-items:center; }
+.about__photo{ aspect-ratio:4/5; border-radius:var(--r-lg); box-shadow:var(--shadow-md); max-width:460px; width:100%; }
+.about__text p{ color:var(--c-text); max-width:60ch; }
+.about__hello{ font-family:var(--f-head); font-style:italic; font-size:1.35rem; color:var(--c-primary); margin-bottom:var(--sp-3); }
+.brands{ display:flex; flex-wrap:wrap; gap:8px; margin:var(--sp-2) 0 var(--sp-6); padding:0; list-style:none; }
+.brands li{ padding:6px 14px; border-radius:var(--r-pill); background:var(--c-primary-soft); color:var(--c-primary-dark); font-size:.88rem; font-weight:600; }
+.quote{
+  position:relative; margin:0; padding:var(--sp-6) var(--sp-5) var(--sp-5) var(--sp-6);
+  background:var(--c-powder-soft); border-radius:var(--r-lg); border-left:4px solid var(--c-accent);
+}
+.quote p{ font-family:var(--f-head); font-size:1.45rem; line-height:1.35; font-style:italic; color:var(--c-text); margin:0 0 var(--sp-3); }
+.quote cite{ font-style:normal; font-size:.95rem; color:var(--c-muted); }
+.quote::before{
+  content:"“"; position:absolute; top:-6px; left:18px; font-family:var(--f-head); font-size:5rem; line-height:1; color:var(--c-accent); opacity:.3;
+}
+@media (min-width:900px){ .about__grid{ grid-template-columns:.85fr 1.15fr; gap:var(--sp-8); } .about__photo{ margin:0; } }
+
+/* =========================================================
+   7. FAQ
+   ========================================================= */
+.faq{ max-width:820px; margin:0 auto; display:grid; gap:12px; }
+.faq__item{ background:var(--c-surface); border-radius:var(--r-md); border:1px solid var(--c-line); transition:box-shadow var(--t), border-color var(--t); }
+.faq__item.is-open{ box-shadow:var(--shadow-md); border-color:transparent; }
+.faq__q{
+  width:100%; display:flex; align-items:center; justify-content:space-between; gap:16px; min-height:64px; padding:16px 20px;
+  background:none; border:0; text-align:left; font:600 1.05rem/1.4 var(--f-body); color:var(--c-text); cursor:pointer; border-radius:var(--r-md);
+}
+.faq__sign{ width:36px; height:36px; border-radius:50%; background:var(--c-primary-soft); color:var(--c-primary); display:grid; place-items:center; flex:none; transition:transform var(--t), background var(--t), color var(--t); }
+.faq__sign .icon{ width:18px; height:18px; }
+.faq__item.is-open .faq__sign{ transform:rotate(45deg); background:var(--c-primary); color:#fff; }
+.faq__a{ display:grid; grid-template-rows:0fr; transition:grid-template-rows .35s var(--ease); }
+.faq__a > div{ overflow:hidden; }
+.faq__a p{ padding:0 20px 20px; margin:0; color:var(--c-muted); max-width:65ch; }
+.faq__item.is-open .faq__a{ grid-template-rows:1fr; }
+.faq-head{ text-align:center; margin-left:auto; margin-right:auto; }
+
+/* =========================================================
+   8. РАЗДЕЛЫ САЙТА
+   ========================================================= */
+.links{ display:grid; gap:var(--sp-4); grid-template-columns:1fr; }
+@media (min-width:480px){ .links{ grid-template-columns:repeat(2,1fr); } }
+@media (min-width:900px){ .links{ grid-template-columns:repeat(3,1fr); gap:var(--sp-5); } }
+.link-card{
+  display:flex; align-items:center; gap:16px; padding:20px; background:var(--c-surface); border-radius:var(--r-lg);
+  border:1px solid var(--c-line); color:var(--c-text); min-height:96px;
+  transition:transform var(--t) var(--ease), box-shadow var(--t), background var(--t), border-color var(--t);
+}
+.link-card:hover{ transform:translateY(-3px); box-shadow:var(--shadow-md); border-color:var(--c-primary); }
+.link-card__ico{ width:52px; height:52px; border-radius:16px; background:var(--c-primary-soft); color:var(--c-primary); display:grid; place-items:center; flex:none; transition:background var(--t), color var(--t); }
+.link-card:hover .link-card__ico{ background:var(--c-primary); color:#fff; }
+.link-card__body{ flex:1; }
+.link-card__title{ display:block; font-family:var(--f-head); font-size:1.5rem; font-weight:600; line-height:1.1; }
+.link-card__sub{ display:block; font-size:.92rem; color:var(--c-muted); margin-top:4px; }
+.link-card > .icon{ color:var(--c-faint); transition:transform var(--t), color var(--t); }
+.link-card:hover > .icon{ transform:translateX(4px); color:var(--c-primary); }
+
+/* =========================================================
+   9. СТУДИЯ
+   ========================================================= */
+.studio__photo{ aspect-ratio:16/10; border-radius:var(--r-lg); box-shadow:var(--shadow-lg); }
+.studio__caption{ display:grid; gap:var(--sp-4); margin-top:var(--sp-6); align-items:start; }
+.studio__caption p{ color:var(--c-muted); max-width:60ch; margin:0; }
+@media (min-width:900px){
+  .studio__wrap{ position:relative; }
+  .studio__photo{ aspect-ratio:21/10; }
+  .studio__caption{
+    position:absolute; left:32px; bottom:32px; max-width:440px; margin:0; padding:var(--sp-6);
+    background:rgba(255,255,255,.94); border-radius:var(--r-lg); box-shadow:var(--shadow-md);
+  }
+}
+
+/* =========================================================
+   10. КОНТАКТЫ И ЗАПИСЬ
+   ========================================================= */
+.contacts__grid{ display:grid; gap:var(--sp-6); }
+.info{ list-style:none; margin:0 0 var(--sp-6); padding:0; display:grid; gap:var(--sp-4); }
+.info li{ display:flex; gap:14px; align-items:flex-start; }
+.info__ico{ width:44px; height:44px; border-radius:50%; background:var(--c-primary-soft); color:var(--c-primary); display:grid; place-items:center; flex:none; }
+.info__ico .icon{ width:20px; height:20px; }
+.info small{ display:block; font-size:.82rem; color:var(--c-muted); text-transform:uppercase; letter-spacing:.08em; }
+.info strong{ font-weight:600; }
+.map{
+  aspect-ratio:4/3; border-radius:var(--r-lg); background:repeating-linear-gradient(45deg, #ECE8F0, #ECE8F0 14px, #E4DFEA 14px, #E4DFEA 28px);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; color:var(--c-muted); font-weight:600; text-align:center; padding:16px;
+}
+.map .icon{ width:40px; height:40px; color:var(--c-primary); }
+.big-actions{ display:grid; gap:12px; margin-bottom:var(--sp-6); }
+.big-actions .btn{ min-height:60px; font-size:1.05rem; width:100%; }
+
+.form{ background:var(--c-surface); border-radius:var(--r-lg); padding:var(--sp-6) var(--sp-5); box-shadow:var(--shadow-md); border:1px solid var(--c-line); }
+.form h3{ margin-bottom:var(--sp-2); }
+.form > p{ color:var(--c-muted); font-size:.95rem; }
+.field{ margin-bottom:var(--sp-4); }
+.field label{ display:block; font-size:.92rem; font-weight:600; margin-bottom:6px; }
+.field input, .field select{
+  width:100%; min-height:52px; padding:0 16px; border-radius:var(--r-sm); border:1.5px solid var(--c-line); background:var(--c-bg);
+  font:inherit; font-size:1rem; color:var(--c-text); transition:border-color var(--t), box-shadow var(--t);
+}
+.field input:focus, .field select:focus{ outline:none; border-color:var(--c-primary); box-shadow:0 0 0 4px var(--c-primary-soft); }
+.form .btn{ width:100%; }
+.form__note{ font-size:.82rem; color:var(--c-muted); margin:var(--sp-3) 0 0; text-align:center; }
+.form__ok{ display:none; margin-top:var(--sp-4); padding:12px 16px; border-radius:var(--r-sm); background:var(--c-primary-soft); color:var(--c-primary-dark); font-size:.95rem; }
+.form__ok.is-shown{ display:block; }
+
+@media (min-width:600px){ .big-actions{ grid-template-columns:repeat(3,1fr); } .big-actions .btn{ padding:0 12px; } }
+@media (min-width:960px){ .contacts__grid{ grid-template-columns:1.1fr .9fr; gap:var(--sp-7); } }
+
+/* =========================================================
+   11. ПОДВАЛ
+   ========================================================= */
+.footer{ background:var(--c-text); color:#D9CFE3; padding:var(--sp-8) 0 var(--sp-6); }
+.footer a{ color:#EFE7F7; }
+.footer a:hover{ color:#fff; text-decoration:underline; }
+.footer__grid{ display:grid; gap:var(--sp-6); margin-bottom:var(--sp-6); }
+.footer .logo{ color:#fff; margin:0 0 var(--sp-3); }
+.footer .logo__sub{ color:#BBAFC8; }
+.footer .logo__name span{ color:#F29BBE; }
+.footer__menu{ list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:4px 18px; }
+.footer__menu a{ display:inline-flex; min-height:var(--tap); align-items:center; }
+.footer__contacts p{ margin:0 0 6px; }
+.footer__bottom{ border-top:1px solid rgba(255,255,255,.12); padding-top:var(--sp-5); font-size:.85rem; color:#A99CB8; }
+.footer__keys{ font-size:.78rem; color:#8E8199; margin:8px 0 0; line-height:1.5; }
+@media (min-width:900px){ .footer__grid{ grid-template-columns:1fr 1.4fr 1fr; } }
+
+/* =========================================================
+   12. ЧАТ И МОБИЛЬНАЯ ПАНЕЛЬ
+   ========================================================= */
+.chat{
+  position:fixed; right:24px; bottom:24px; z-index:40; display:none; align-items:center; gap:12px;
+  padding:10px 20px 10px 10px; border-radius:var(--r-pill); background:var(--c-surface); color:var(--c-text);
+  box-shadow:var(--shadow-lg); border:1px solid var(--c-line); font-weight:600; font-size:.95rem;
+  transition:transform var(--t) var(--ease), box-shadow var(--t);
+}
+.chat:hover{ transform:translateY(-3px); }
+.chat__ava{ position:relative; width:44px; height:44px; border-radius:50%; background:var(--c-primary); color:#fff; display:grid; place-items:center; }
+.chat__ava::after{
+  content:""; position:absolute; right:0; bottom:1px; width:12px; height:12px; border-radius:50%; background:#2EAD5C; border:2px solid #fff;
+}
+.chat small{ display:block; font-weight:500; font-size:.78rem; color:var(--c-muted); }
+@media (min-width:768px){ .chat{ display:flex; } }
+
+.m-bar{
+  position:fixed; left:0; right:0; bottom:0; z-index:40; display:grid; grid-template-columns:1fr 1fr; gap:10px;
+  padding:10px var(--gutter) calc(10px + env(safe-area-inset-bottom)); background:rgba(255,255,255,.96);
+  border-top:1px solid var(--c-line); box-shadow:0 -6px 20px rgba(46,31,61,.08);
+}
+.m-bar .btn{ min-height:52px; padding:0 12px; }
+@media (min-width:768px){ .m-bar{ display:none; } }
+</style>
+</head>
+
+<body>
+
+<!-- SVG-спрайт линейных иконок -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></symbol>
+  <symbol id="i-wa" viewBox="0 0 24 24"><path d="M3.5 20.5 5 16a8.5 8.5 0 1 1 3 3z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 .8a4 4 0 0 1-1.8-1.8l.8-1-1-2z"/></symbol>
+  <symbol id="i-viber" viewBox="0 0 24 24"><path d="M12 3c5 0 8 2 8 7.5S17 18 12 18l-3 3v-3.3C5.5 16.8 4 14.4 4 10.5 4 5 7 3 12 3z"/><path d="M13 7.5a3 3 0 0 1 3 3M13 5.5a5 5 0 0 1 5 5"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h8M8 13h5"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-12a7 7 0 1 1 14 0c0 5.8-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M8 3v4M16 3v4M3.5 10h17"/></symbol>
+  <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="9" r="5.5"/><path d="m8.5 13.5-1.5 7.5 5-2.5 5 2.5-1.5-7.5"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/><path d="M9.5 14.5a2.5 2.5 0 0 0 2.5 2.5"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v9H4z"/><path d="M10 20v-5h4v5"/></symbol>
+  <symbol id="i-honey" viewBox="0 0 24 24"><path d="M7 4h10v3c0 2-1.5 3-1.5 5S17 15 17 17a5 5 0 0 1-10 0c0-2 1.5-3 1.5-5S7 9 7 7z"/><path d="M9.5 15h5"/></symbol>
+  <symbol id="i-wax" viewBox="0 0 24 24"><rect x="5" y="9" width="14" height="11" rx="3"/><path d="M9 9V6a3 3 0 0 1 6 0v3M5 13h14"/></symbol>
+  <symbol id="i-hands" viewBox="0 0 24 24"><path d="M7 13V6.5a1.5 1.5 0 0 1 3 0V12M10 11V4.5a1.5 1.5 0 0 1 3 0V11M13 11V5.5a1.5 1.5 0 0 1 3 0V13"/><path d="M16 9.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1a6 6 0 0 1-5-2.7L4.5 14a1.5 1.5 0 0 1 2.5-1.6"/></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 19c0-8 5-14 15-15-1 10-7 15-15 15z"/><path d="M5 19 13 11"/></symbol>
+  <symbol id="i-feather" viewBox="0 0 24 24"><path d="M20 4C11 4 6 9 6 16v4"/><path d="M6 16c6 0 11-4 12-10M9 12h6"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.5 3 8.5 7 10 4-1.5 7-5.5 7-10V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7a4.3 4.3 0 0 1 7.5 2.8C19.5 15.4 12 20 12 20z"/></symbol>
+  <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.5"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></symbol>
+  <symbol id="i-gift" viewBox="0 0 24 24"><rect x="3.5" y="8" width="17" height="4" rx="1"/><path d="M5 12v8h14v-8M12 8v12M12 8S10.5 4 8 4.5 7 8 12 8zM12 8s1.5-4 4-3.5S17 8 12 8z"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+</svg>
+
+<!-- Плашка демо-проекта -->
+<div class="demo-bar"><strong>Демо-проект.</strong> Концепт главной страницы студии красоты. Все названия, контакты и тексты вымышлены.</div>
+
+<!-- ============ ШАПКА ============ -->
+<header class="header" id="header">
+  <div class="container header__inner">
+    <a href="#" class="logo" aria-label="LAVENDER STUDIO — на главную">
+      <span class="logo__name">LAVENDER<span>·</span>STUDIO</span>
+      <span class="logo__sub">Депиляция и массаж</span>
+    </a>
+
+    <nav class="nav" aria-label="Основное меню">
+      <ul class="nav__list">
+        <li><a class="nav__link" href="#">Блог</a></li>
+        <li><a class="nav__link" href="#" aria-current="page">Главная</a></li>
+        <li><a class="nav__link" href="#">Цены</a></li>
+        <li><a class="nav__link" href="#">Отзывы</a></li>
+        <li class="has-drop" data-drop>
+          <button class="nav__link" type="button" aria-expanded="false" aria-controls="drop-promo">
+            Акции <svg class="icon chev"><use href="#i-chev"/></svg>
+          </button>
+          <ul class="dropdown" id="drop-promo">
+            <li><a href="#">Скидки на депиляцию</a></li>
+            <li><a href="#">Курс массажа со скидкой</a></li>
+            <li><a href="#">Подарочные сертификаты</a></li>
+          </ul>
+        </li>
+        <li><a class="nav__link" href="#">Работы</a></li>
+        <li><a class="nav__link" href="#">Сертификаты</a></li>
+        <li><a class="nav__link" href="#">Контакты</a></li>
+      </ul>
+    </nav>
+
+    <form class="search header__search" role="search" action="#">
+      <label for="q" class="visually-hidden">Поиск по сайту</label>
+      <input id="q" type="search" placeholder="Поиск по сайту">
+      <button type="submit" aria-label="Найти"><svg class="icon"><use href="#i-search"/></svg></button>
+    </form>
+
+    <button class="icon-btn search-toggle" type="button" aria-label="Открыть поиск" aria-expanded="false" aria-controls="m-search">
+      <svg class="icon"><use href="#i-search"/></svg>
+    </button>
+    <a href="#" class="btn btn--accent btn--sm header__cta">Записаться</a>
+    <button class="icon-btn burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="m-menu">
+      <svg class="icon"><use href="#i-menu"/></svg>
+    </button>
+  </div>
+
+  <div class="m-search" id="m-search">
+    <div class="container">
+      <form class="search" role="search" action="#">
+        <label for="q-m" class="visually-hidden">Поиск по сайту</label>
+        <input id="q-m" type="search" placeholder="Поиск по сайту" tabindex="-1">
+        <button type="submit" aria-label="Найти" tabindex="-1"><svg class="icon"><use href="#i-search"/></svg></button>
+      </form>
+    </div>
+  </div>
+</header>
+
+<!-- Мобильное меню -->
+<div class="m-menu" id="m-menu" role="dialog" aria-modal="true" aria-label="Меню" aria-hidden="true">
+  <div class="m-menu__top">
+    <a href="#" class="logo"><span class="logo__name">LAVENDER<span>·</span>STUDIO</span><span class="logo__sub">Депиляция и массаж</span></a>
+    <button class="icon-btn m-close" type="button" aria-label="Закрыть меню"><svg class="icon"><use href="#i-close"/></svg></button>
+  </div>
+  <ul class="m-menu__list">
+    <li><a class="m-menu__link" href="#">Блог</a></li>
+    <li><a class="m-menu__link" href="#" aria-current="page">Главная</a></li>
+    <li><a class="m-menu__link" href="#">Цены</a></li>
+    <li><a class="m-menu__link" href="#">Отзывы</a></li>
+    <li class="m-drop">
+      <button class="m-menu__link" type="button" aria-expanded="false" aria-controls="m-sub">Акции <svg class="icon chev"><use href="#i-chev"/></svg></button>
+      <div class="m-sub" id="m-sub"><ul>
+        <li><a href="#">Скидки на депиляцию</a></li>
+        <li><a href="#">Курс массажа со скидкой</a></li>
+        <li><a href="#">Подарочные сертификаты</a></li>
+      </ul></div>
+    </li>
+    <li><a class="m-menu__link" href="#">Работы</a></li>
+    <li><a class="m-menu__link" href="#">Сертификаты</a></li>
+    <li><a class="m-menu__link" href="#">Контакты</a></li>
+  </ul>
+  <div class="m-menu__actions">
+    <a href="#" class="btn btn--wa"><svg class="icon"><use href="#i-wa"/></svg>Записаться в WhatsApp</a>
+    <a href="#" class="btn btn--outline"><svg class="icon"><use href="#i-phone"/></svg>+7 (900) 000-00-00</a>
+  </div>
+</div>
+
+<main>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="container hero__grid">
+      <div class="reveal">
+        <span class="eyebrow">Студия депиляции и массажа</span>
+        <h1 id="hero-title">Гладкая кожа и лёгкость в теле без стресса</h1>
+        <p class="hero__lead">Шугаринг, депиляция воском и антицеллюлитный массаж в уютной студии рядом с вами</p>
+        <div class="hero__actions">
+          <a href="#" class="btn btn--accent"><svg class="icon"><use href="#i-wa"/></svg>Записаться в WhatsApp</a>
+          <a href="#" class="btn btn--outline"><svg class="icon"><use href="#i-phone"/></svg>Позвонить</a>
+        </div>
+        <ul class="perks">
+          <li class="perk"><span class="perk__ico"><svg class="icon"><use href="#i-calendar"/></svg></span>Опыт больше 10 лет</li>
+          <li class="perk"><span class="perk__ico"><svg class="icon"><use href="#i-award"/></svg></span>Сертифицированный мастер</li>
+          <li class="perk"><span class="perk__ico"><svg class="icon"><use href="#i-drop"/></svg></span>Обезболивающие средства</li>
+          <li class="perk"><span class="perk__ico"><svg class="icon"><use href="#i-home"/></svg></span>Уютная студия</li>
+        </ul>
+      </div>
+
+      <div class="hero__visual reveal">
+        <span class="hero__deco" aria-hidden="true"></span>
+        <div class="photo hero__frame">
+          <img src="images/master-portrait.jpg" alt="Портрет мастера студии" width="440" height="550" fetchpriority="high" data-ph>
+          <div class="ph" aria-hidden="true"><svg class="icon"><use href="#i-user"/></svg>Портрет мастера<br><small>images/master-portrait.jpg</small></div>
+        </div>
+        <div class="hero__badge">
+          <strong>10+</strong><span>лет заботы<br>о вашей коже</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ УСЛУГИ ============ -->
+  <section class="section" aria-labelledby="services-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Услуги</span>
+        <h2 id="services-title">Мои услуги</h2>
+        <p>Работаю на профессиональных материалах и подбираю процедуру под ваш тип кожи и волос.</p>
+      </div>
+      <div class="cards cards--4">
+        <article class="card reveal">
+          <div class="card__ico"><svg class="icon"><use href="#i-honey"/></svg></div>
+          <h3>Шугаринг</h3>
+          <p>Бережное удаление волос сахарной пастой.</p>
+          <a href="#" class="more">Подробнее и цены <svg class="icon"><use href="#i-arrow"/></svg></a>
+        </article>
+        <article class="card reveal">
+          <div class="card__ico"><svg class="icon"><use href="#i-wax"/></svg></div>
+          <h3>Депиляция воском</h3>
+          <p>Полимерный воск: быстро, аккуратно и подходит для чувствительных зон.</p>
+          <a href="#" class="more">Подробнее и цены <svg class="icon"><use href="#i-arrow"/></svg></a>
+        </article>
+        <article class="card reveal">
+          <div class="card__ico"><svg class="icon"><use href="#i-hands"/></svg></div>
+          <h3>Антицеллюлитный массаж</h3>
+          <p>Курс для упругой кожи, лёгкости в теле и красивого силуэта.</p>
+          <a href="#" class="more">Подробнее и цены <svg class="icon"><use href="#i-arrow"/></svg></a>
+        </article>
+        <article class="card reveal">
+          <div class="card__ico"><svg class="icon"><use href="#i-leaf"/></svg></div>
+          <h3>SPA-обёртывания</h3>
+          <p>Расслабление, детокс и увлажнение кожи после массажа или отдельно.</p>
+          <a href="#" class="more">Подробнее и цены <svg class="icon"><use href="#i-arrow"/></svg></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ О МАСТЕРЕ ============ -->
+  <section class="section section--tint" aria-labelledby="about-title">
+    <div class="container about__grid">
+      <div class="photo about__photo reveal">
+        <img src="images/master-about.jpg" alt="Мастер студии за работой" width="460" height="575" loading="lazy" data-ph>
+        <div class="ph" aria-hidden="true"><svg class="icon"><use href="#i-user"/></svg>Фото мастера<br><small>images/master-about.jpg</small></div>
+      </div>
+      <div class="about__text reveal">
+        <span class="eyebrow">Обо мне</span>
+        <p class="about__hello">Здравствуйте! Рада видеть вас.</p>
+        <h2 id="about-title">Меня зовут Анна</h2>
+        <p>Я сертифицированный мастер по депиляции воском и сахарной пастой, по антицеллюлитному массажу и SPA-обёртываниям.</p>
+        <p>Этим делом я занимаюсь больше десяти лет. Всё это время я учусь, пробую новые методики и слежу за тем, чтобы каждая процедура проходила комфортно.</p>
+        <p>Работаю в спокойном темпе, без спешки, и всегда объясняю, что и зачем делаю.</p>
+        <ul class="brands" aria-label="Направления работы">
+          <li>Шугаринг</li><li>Ваксинг</li><li>Массаж</li><li>SPA-уход</li>
+        </ul>
+        <blockquote class="quote">
+          <p>Приходите в гости, берите с собой только хорошее настроение, а я всё подробно расскажу за чашечкой кофе.</p>
+          <cite>— Анна, мастер студии</cite>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ БОИТЕСЬ ПЕРВОЙ ПРОЦЕДУРЫ? ============ -->
+  <section class="section" aria-labelledby="fear-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Первый раз</span>
+        <h2 id="fear-title">Боитесь первой процедуры?</h2>
+        <p>Это нормально. Расслабьтесь и успокойтесь: вот почему всё будет хорошо.</p>
+      </div>
+      <div class="cards cards--4">
+        <article class="card reveal">
+          <div class="card__ico"><svg class="icon"><use href="#i-feather"/></svg></div>
+          <h3>Волос станет мягче</h3>
+          <p>Уже после первой процедуры волосы становятся мягче, а их примерно на 30% меньше.</p>
+        </article>
+        <article class="card reveal">
+          <div class="card__ico"><svg class="icon"><use href="#i-shield"/></svg></div>
+          <h3>Минимум боли</h3>
+          <p>Использую обезболивающие и успокаивающие средства до и после процедуры.</p>
+        </article>
+        <article class="card reveal">
+          <div class="card__ico"><svg class="icon"><use href="#i-heart"/></svg></div>
+          <h3>Раньше был только станок?</h3>
+          <p>Ничего страшного. Я знаю, как сделать первую процедуру бережно и без стресса.</p>
+        </article>
+        <article class="card reveal">
+          <div class="card__ico"><svg class="icon"><use href="#i-sparkle"/></svg></div>
+          <h3>Сияющая кожа</h3>
+          <p>После процедуры кожа гладкая и ухоженная, будет сиять красотой и здоровьем.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ЧАСТЫЕ ВОПРОСЫ ============ -->
+  <section class="section section--tint" aria-labelledby="faq-title">
+    <div class="container">
+      <div class="section-head faq-head reveal">
+        <span class="eyebrow">Вопросы</span>
+        <h2 id="faq-title">Частые вопросы</h2>
+      </div>
+      <div class="faq reveal">
+        <div class="faq__item">
+          <button class="faq__q" type="button" aria-expanded="false" aria-controls="faq-1" id="faq-q1">
+            Сколько сеансов массажа нужно?
+            <span class="faq__sign"><svg class="icon"><use href="#i-plus"/></svg></span>
+          </button>
+          <div class="faq__a" id="faq-1" role="region" aria-labelledby="faq-q1"><div>
+            <p>Минимум 5–10 сеансов: массаж — это курс, если вы хотите увидеть эффект. Всё зависит от физиологии: кому-то хватает 5, а кому-то нужно до 15.</p>
+          </div></div>
+        </div>
+        <div class="faq__item">
+          <button class="faq__q" type="button" aria-expanded="false" aria-controls="faq-2" id="faq-q2">
+            Какой длины должен быть волос на депиляцию и шугаринг?
+            <span class="faq__sign"><svg class="icon"><use href="#i-plus"/></svg></span>
+          </button>
+          <div class="faq__a" id="faq-2" role="region" aria-labelledby="faq-q2"><div>
+            <p>Приходите при длине волос 3–5 мм. Если не уверены, напишите мне, подскажу.</p>
+          </div></div>
+        </div>
+        <div class="faq__item">
+          <button class="faq__q" type="button" aria-expanded="false" aria-controls="faq-3" id="faq-q3">
+            Что лучше: шугаринг или воск?
+            <span class="faq__sign"><svg class="icon"><use href="#i-plus"/></svg></span>
+          </button>
+          <div class="faq__a" id="faq-3" role="region" aria-labelledby="faq-q3"><div>
+            <p>Это выбор каждой: кому-то нравится шугаринг, кому-то воск. Я подробно расскажу о разнице и подберу то, что подойдёт именно вам.</p>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ РАЗДЕЛЫ САЙТА ============ -->
+  <section class="section" aria-labelledby="links-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Навигация</span>
+        <h2 id="links-title">Разделы сайта</h2>
+      </div>
+      <div class="links">
+        <a href="#" class="link-card reveal">
+          <span class="link-card__ico"><svg class="icon"><use href="#i-tag"/></svg></span>
+          <span class="link-card__body"><span class="link-card__title">Цены</span><span class="link-card__sub">Узнать стоимость услуг</span></span>
+          <svg class="icon"><use href="#i-arrow"/></svg>
+        </a>
+        <a href="#" class="link-card reveal">
+          <span class="link-card__ico"><svg class="icon"><use href="#i-star"/></svg></span>
+          <span class="link-card__body"><span class="link-card__title">Отзывы</span><span class="link-card__sub">Что говорят клиентки</span></span>
+          <svg class="icon"><use href="#i-arrow"/></svg>
+        </a>
+        <a href="#" class="link-card reveal">
+          <span class="link-card__ico"><svg class="icon"><use href="#i-image"/></svg></span>
+          <span class="link-card__body"><span class="link-card__title">Работы</span><span class="link-card__sub">Примеры моих работ</span></span>
+          <svg class="icon"><use href="#i-arrow"/></svg>
+        </a>
+        <a href="#" class="link-card reveal">
+          <span class="link-card__ico"><svg class="icon"><use href="#i-gift"/></svg></span>
+          <span class="link-card__body"><span class="link-card__title">Акции</span><span class="link-card__sub">Действующие скидки</span></span>
+          <svg class="icon"><use href="#i-arrow"/></svg>
+        </a>
+        <a href="#" class="link-card reveal">
+          <span class="link-card__ico"><svg class="icon"><use href="#i-award"/></svg></span>
+          <span class="link-card__body"><span class="link-card__title">Сертификаты</span><span class="link-card__sub">Мои дипломы и обучение</span></span>
+          <svg class="icon"><use href="#i-arrow"/></svg>
+        </a>
+        <a href="#" class="link-card reveal">
+          <span class="link-card__ico"><svg class="icon"><use href="#i-doc"/></svg></span>
+          <span class="link-card__body"><span class="link-card__title">Блог</span><span class="link-card__sub">Полезные статьи об уходе</span></span>
+          <svg class="icon"><use href="#i-arrow"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ СТУДИЯ ============ -->
+  <section class="section section--tint" aria-labelledby="studio-title">
+    <div class="container">
+      <div class="studio__wrap reveal">
+        <div class="photo studio__photo">
+          <img src="images/studio-interior.jpg" alt="Интерьер студии в лавандовых тонах: диван, ресепшен и мягкий свет" width="1200" height="570" loading="lazy" data-ph>
+          <div class="ph" aria-hidden="true"><svg class="icon"><use href="#i-image"/></svg>Фото интерьера студии<br><small>images/studio-interior.jpg</small></div>
+        </div>
+        <div class="studio__caption">
+          <div>
+            <span class="eyebrow">Студия</span>
+            <h2 id="studio-title">Место, где можно выдохнуть</h2>
+          </div>
+          <p>Мягкий свет, тишина и чашка кофе перед процедурой. Здесь спокойно и уютно, даже если вы пришли впервые.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ КОНТАКТЫ И ЗАПИСЬ ============ -->
+  <section class="section" aria-labelledby="contacts-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Контакты</span>
+        <h2 id="contacts-title">Запишитесь на процедуру</h2>
+        <p>Удобнее всего написать в WhatsApp или Viber. Отвечу и подберу время.</p>
+      </div>
+
+      <div class="contacts__grid">
+        <div class="reveal">
+          <div class="big-actions">
+            <a href="#" class="btn btn--wa"><svg class="icon"><use href="#i-wa"/></svg>WhatsApp</a>
+            <a href="#" class="btn btn--viber"><svg class="icon"><use href="#i-viber"/></svg>Viber</a>
+            <a href="#" class="btn btn--accent"><svg class="icon"><use href="#i-phone"/></svg>Позвонить</a>
+          </div>
+          <ul class="info">
+            <li><span class="info__ico"><svg class="icon"><use href="#i-pin"/></svg></span>
+              <div><small>Адрес</small><strong>г. Ваш город, ул. Примерная, 1</strong></div></li>
+            <li><span class="info__ico"><svg class="icon"><use href="#i-phone"/></svg></span>
+              <div><small>Телефон, WhatsApp, Viber</small><a href="#"><strong>+7 (900) 000-00-00</strong></a></div></li>
+            <li><span class="info__ico"><svg class="icon"><use href="#i-clock"/></svg></span>
+              <div><small>Часы работы</small><strong>Пн–Сб: 10:00–20:00</strong><br><span style="color:var(--c-muted)">Вс: по записи</span></div></li>
+          </ul>
+          <div class="map" role="img" aria-label="Место для карты">
+            <svg class="icon"><use href="#i-pin"/></svg>
+            Карта
+            <span style="font-weight:400;font-size:.9rem">Здесь будет встроенная карта проезда</span>
+          </div>
+        </div>
+
+        <form class="form reveal" action="#" novalidate id="booking-form">
+          <h3>Оставьте заявку</h3>
+          <p>Я перезвоню и предложу удобное время.</p>
+          <div class="field">
+            <label for="f-name">Имя</label>
+            <input id="f-name" name="name" type="text" autocomplete="given-name" placeholder="Как к вам обращаться">
+          </div>
+          <div class="field">
+            <label for="f-phone">Телефон</label>
+            <input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__">
+          </div>
+          <div class="field">
+            <label for="f-time">Удобное время</label>
+            <select id="f-time" name="time">
+              <option>Утро (10:00–13:00)</option>
+              <option>День (13:00–17:00)</option>
+              <option>Вечер (17:00–20:00)</option>
+              <option>Любое время</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn--accent">Отправить</button>
+          <p class="form__note">Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>
+          <p class="form__ok" role="status" id="form-ok">Это демо-версия: форма пока не отправляется.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ ПОДВАЛ ============ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div>
+        <a href="#" class="logo"><span class="logo__name">LAVENDER<span>·</span>STUDIO</span><span class="logo__sub">Депиляция и массаж</span></a>
+        <p style="margin:0;font-size:.95rem">Уход за кожей и телом в спокойной обстановке.</p>
+      </div>
+      <nav aria-label="Меню в подвале">
+        <ul class="footer__menu">
+          <li><a href="#">Блог</a></li><li><a href="#">Главная</a></li><li><a href="#">Цены</a></li><li><a href="#">Отзывы</a></li>
+          <li><a href="#">Акции</a></li><li><a href="#">Работы</a></li><li><a href="#">Сертификаты</a></li><li><a href="#">Контакты</a></li>
+        </ul>
+      </nav>
+      <div class="footer__contacts">
+        <p>г. Ваш город, ул. Примерная, 1</p>
+        <p><a href="#">+7 (900) 000-00-00</a></p>
+        <p>WhatsApp · Viber</p>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      © Lavender Studio. Демо-проект, все данные вымышлены.
+      <p class="footer__keys">шугаринг · депиляция воском · антицеллюлитный массаж · SPA-обёртывания · студия красоты</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Плавающая кнопка чата -->
+<a href="#" class="chat" aria-label="Написать мастеру в чат">
+  <span class="chat__ava"><svg class="icon"><use href="#i-chat"/></svg></span>
+  <span>Напишите мне, я в сети!<small>Обычно отвечаю быстро</small></span>
+</a>
+
+<!-- Нижняя панель (мобильные) -->
+<div class="m-bar">
+  <a href="#" class="btn btn--wa"><svg class="icon"><use href="#i-wa"/></svg>WhatsApp</a>
+  <a href="#" class="btn btn--accent"><svg class="icon"><use href="#i-phone"/></svg>Позвонить</a>
+</div>
+
+<script>
+(function(){
+  /* Прототип: ссылки-заглушки никуда не ведут */
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[href="#"]');
+    if (a) e.preventDefault();
+  });
+  document.querySelectorAll('form[role="search"]').forEach(function(f){
+    f.addEventListener('submit', function(e){ e.preventDefault(); });
+  });
+
+  /* Плейсхолдеры, если фото ещё не загружены */
+  document.querySelectorAll('img[data-ph]').forEach(function(img){
+    function miss(){ img.parentElement.classList.add('is-missing'); }
+    if (img.complete && img.naturalWidth === 0) miss();
+    img.addEventListener('error', miss);
+  });
+
+  /* Тень шапки при прокрутке */
+  var header = document.getElementById('header');
+  function onScroll(){ header.classList.toggle('is-scrolled', window.scrollY > 8); }
+  window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  /* Выпадающее меню «Акции» (десктоп) */
+  document.querySelectorAll('[data-drop]').forEach(function(li){
+    var btn = li.querySelector('button');
+    var set = function(open){ li.classList.toggle('is-open', open); btn.setAttribute('aria-expanded', open); };
+    btn.addEventListener('click', function(e){ e.stopPropagation(); set(!li.classList.contains('is-open')); });
+    li.addEventListener('mouseenter', function(){ if (matchMedia('(hover:hover)').matches) set(true); });
+    li.addEventListener('mouseleave', function(){ if (matchMedia('(hover:hover)').matches) set(false); });
+    li.addEventListener('focusout', function(e){ if (!li.contains(e.relatedTarget)) set(false); });
+    document.addEventListener('click', function(){ set(false); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && li.classList.contains('is-open')){ set(false); btn.focus(); } });
+  });
+
+  /* Мобильное меню на весь экран */
+  var menu = document.getElementById('m-menu');
+  var burger = document.querySelector('.burger');
+  function setMenu(open){
+    menu.classList.toggle('is-open', open);
+    menu.setAttribute('aria-hidden', !open);
+    burger.setAttribute('aria-expanded', open);
+    document.body.classList.toggle('no-scroll', open);
+    if (open) menu.querySelector('.m-close').focus(); else burger.focus();
+  }
+  burger.addEventListener('click', function(){ setMenu(true); });
+  menu.querySelector('.m-close').addEventListener('click', function(){ setMenu(false); });
+  menu.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ setMenu(false); }); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && menu.classList.contains('is-open')) setMenu(false); });
+  window.addEventListener('resize', function(){ if (innerWidth >= 1180 && menu.classList.contains('is-open')) setMenu(false); });
+
+  var mDrop = menu.querySelector('.m-drop'), mBtn = mDrop.querySelector('button');
+  mBtn.addEventListener('click', function(){
+    var open = !mDrop.classList.contains('is-open');
+    mDrop.classList.toggle('is-open', open); mBtn.setAttribute('aria-expanded', open);
+  });
+
+  /* Раскрытие поиска на мобильных */
+  var sToggle = document.querySelector('.search-toggle'), sPanel = document.getElementById('m-search');
+  var sInput = sPanel.querySelector('input'), sBtn = sPanel.querySelector('button');
+  sToggle.addEventListener('click', function(){
+    var open = !sPanel.classList.contains('is-open');
+    sPanel.classList.toggle('is-open', open);
+    sToggle.setAttribute('aria-expanded', open);
+    sToggle.setAttribute('aria-label', open ? 'Закрыть поиск' : 'Открыть поиск');
+    sInput.tabIndex = sBtn.tabIndex = open ? 0 : -1;
+    if (open) setTimeout(function(){ sInput.focus(); }, 150);
+  });
+
+  /* Аккордеон FAQ */
+  document.querySelectorAll('.faq__item').forEach(function(item){
+    var btn = item.querySelector('.faq__q');
+    btn.addEventListener('click', function(){
+      var open = !item.classList.contains('is-open');
+      item.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', open);
+    });
+  });
+
+  /* Форма записи (демо) */
+  document.getElementById('booking-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    document.getElementById('form-ok').classList.add('is-shown');
+  });
+
+  /* Плавное появление блоков при прокрутке */
+  var items = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (en.isIntersecting){ en.target.classList.add('is-visible'); io.unobserve(en.target); }
+      });
+    }, {threshold:.12, rootMargin:'0px 0px -40px 0px'});
+    items.forEach(function(el){
+      el.style.transitionDelay = (el.parentElement.children.length > 1 ? (Array.prototype.indexOf.call(el.parentElement.children, el) % 4) * 80 : 0) + 'ms';
+      io.observe(el);
+    });
+  } else {
+    items.forEach(function(el){ el.classList.add('is-visible'); });
+  }
+})();
+</script>
+</body>
+</html>
